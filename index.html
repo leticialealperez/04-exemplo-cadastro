@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Cadstro de Livros</title>
+</head>
+
+<body>
+    <h1>Sistema de Cadastro de Livros</h1>
+
+    <form id="form-cadastro">
+        <fieldset>
+            <legend>Registrar Livro</legend>
+
+            <label for="codigo-livro">Registro ID</label>
+            <input type="text" name="codigo-livro" id="input-registro">
+
+            <label for="titulo-livro">Título Livro</label>
+            <input type="text" name="titulo-livro" id="input-titulo">
+
+            <label for="descricao-livro">Descrição do Livro</label>
+            <input type="text" name="descricao-livro" id="input-descricao">
+
+            <input type="submit" value="Salvar" id="btn-salvar">
+        </fieldset>
+    </form>
+
+    <table id="tabela-registros">
+        <tr>
+            <th>Registro ID</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+        </tr>
+        <tr class="registros">
+            <td>1234</td>
+            <td>Titulo Exemplo</td>
+            <td>Descrição Exemplo</td>
+            <td>
+                <button class="btn-editar">Editar</button>
+                <button class="btn-apagar">Apagar</button>
+            </td>
+        </tr>
+
+    </table>
+    <script src="index.js"></script>
+</body>
+
+</html>
