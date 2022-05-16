@@ -5,6 +5,9 @@ let formulario = document.querySelector('#form-cadastro');
 let inputRegistro = document.querySelector('#input-registro');
 let inputTitulo = document.querySelector('#input-titulo');
 let inputDescricao = document.querySelector('#input-descricao');
+let botaoCancelar = document.querySelector('#btn-cancelar');
+let botaoAtualizar = document.querySelector('#btn-atualizar');
+let botaoSalvar = document.querySelector('#btn-salvar');
 
 let tabelaLivros = document.querySelector('#tabela-registros');
 
@@ -17,6 +20,7 @@ formulario.addEventListener('submit', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', pegarDadosStorage);
+botaoCancelar.addEventListener('click', cancelarEdicao);
 
 
 
@@ -67,7 +71,7 @@ function salvarNaTabela(dadosLivro){
     colunaTitulo.innerHTML = dadosLivro.tituloLivro;
     colunaDescricao.innerHTML = dadosLivro.descricaoLivro;
     colunaAcoes.innerHTML = `
-                                <button class="btn-editar">Editar</button>
+                                <button class="btn-editar" onclick="prepararEdicao(${dadosLivro.registroID})">Editar</button>
                                 <button class="btn-apagar" onclick="apagarRegistro(${dadosLivro.registroID})">Apagar</button>
                             `
 
@@ -138,6 +142,72 @@ function apagarRegistro(registroID){
     }else{
         return
     }
+}
 
+function cancelarEdicao(){
+    limparCampos();
+    botaoSalvar.setAttribute('style', 'display: inline-block');
+    botaoAtualizar.setAttribute('style', 'display: none');
+    botaoCancelar.setAttribute('style', 'display: none');
+    inputRegistro.removeAttribute('readonly');
+    inputRegistro.removeAttribute('disabled');
+}
 
+function prepararEdicao(registroID){
+    botaoSalvar.setAttribute('style', 'display: none');
+    botaoAtualizar.setAttribute('style', 'display: inline-block');
+    botaoAtualizar.setAttribute('onclick', `atualizarRegistro(${registroID})`);
+    botaoCancelar.setAttribute('style', 'display: inline-block');
+
+    /* alert(`O registro que quero editar é ${registroID}`); */
+    let listaLivros = JSON.parse(localStorage.getItem('Meus Livros'));
+    let livroEncontrado = listaLivros.find((livro) => livro.registroID == registroID);
+
+    inputRegistro.value = livroEncontrado.registroID;
+    inputTitulo.value = livroEncontrado.tituloLivro;
+    inputDescricao.value = livroEncontrado.descricaoLivro;
+    inputRegistro.setAttribute('readonly', 'true');
+    inputRegistro.setAttribute('disabled', 'true');
+}
+
+function atualizarRegistro(registroID){
+    /* alert(registroID); */
+
+    let novoRegistro = inputRegistro.value;
+    let novoTitulo = inputTitulo.value;
+    let novaDescricao = inputDescricao.value;
+
+    let livroAtualizado = {
+        registroID: novoRegistro,
+        tituloLivro: novoTitulo,
+        descricaoLivro: novaDescricao
+    }
+
+    let listaLivros = JSON.parse(localStorage.getItem('Meus Livros'));
+    let indiceEncontrado = listaLivros.findIndex((livro) => livro.registroID == registroID);
+
+    listaLivros[indiceEncontrado] = livroAtualizado;
+
+    let linhasTabela = document.querySelectorAll('.registros');
+    
+    for(let linha of linhasTabela){
+        if(linha.id == registroID){
+            let colunas = linha.children;
+            console.log(colunas);
+
+            //equivale ao registroID
+            colunas[0].innerText = livroAtualizado.registroID;
+            
+            //equivale ao titulo do Livro
+            colunas[1].innerText = livroAtualizado.tituloLivro;
+
+            //equivale a descricao do livro
+            colunas[2].innerText = livroAtualizado.descricaoLivro;
+
+        }
+    }
+
+    localStorage.clear();
+    salvarNoStorage(listaLivros);
+    cancelarEdicao();
 }
